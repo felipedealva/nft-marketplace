@@ -48,3 +48,11 @@ export default withSession(async (
     return res.status(422).send({ message: "Invalid endpoint" });
   }
 })
+
+export const config = {
+  api: {
+      bodyParser: {
+          sizeLimit: '10mb'
+      }
+  }
+}
