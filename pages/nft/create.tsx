@@ -10,12 +10,15 @@ import axios from "axios";
 import { useWeb3 } from "@providers/web3";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
-import { useListingPrice, useNetwork } from "@hooks/web3";
+import { useAccount, useListingPrice, useNetwork } from "@hooks/web3";
 import { ExclamationIcon } from "@heroicons/react/solid";
+import Router from "next/router";
+
 
 const ALLOWED_FIELDS = ["name", "description", "image", "attributes"];
 
 const NftCreate: NextPage = () => {
+  const { account } = useAccount();
   const { network } = useNetwork();
   const { ethereum, contract } = useWeb3();
   const { listingPrice } = useListingPrice();
@@ -59,6 +62,10 @@ const NftCreate: NextPage = () => {
     }
 
     const file = e.target.files[0];
+    const megaBytes = file.size / (1024 ** 2)
+    if (megaBytes > 9) {
+      throw new Error("Please select an asset that is less than 10MB")
+    }
     const buffer = await file.arrayBuffer();
     const bytes = new Uint8Array(buffer);
 
@@ -154,16 +161,19 @@ const NftCreate: NextPage = () => {
       );
 
       await toast.promise(transaction!.wait(), {
-        pending: "Creating NFT",
+        pending: "Minting NFT",
         success: "NFT created",
         error: "NFT error",
       });
+
+      Router.push("/")
+
     } catch (e: any) {
       console.error(e.message);
     }
   };
 
-  if (!network.isConnectedToNetwork) {
+  if (!network.isConnectedToNetwork || account.error) {
     return (
       <BaseLayout>
         <div className="rounded-md bg-yellow-50 p-4 mt-10">
@@ -180,9 +190,9 @@ const NftCreate: NextPage = () => {
               </h3>
               <div className="mt-2 text-sm text-yellow-700">
                 <p>
-                  {network.isLoading
-                    ? "Loading..."
-                    : `Connect to ${network.targetNetwork}`}
+                  { account.error ? account.error : '' }
+                  { !network.isConnectedToNetwork && '\n Please Connect to Ganache.'}
+                  { network.isLoading && "Loading..."}
                 </p>
               </div>
             </div>
