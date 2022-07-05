@@ -93,6 +93,9 @@ const NftCreate: NextPage = () => {
       });
     } catch (e: any) {
       console.error(e.message);
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500)
     }
   };
 
