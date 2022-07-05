@@ -5,7 +5,7 @@ import { BaseLayout } from "@ui";
 
 import { Nft } from "@_types/nft";
 import { useListingPrice, useOwnedNfts } from "@hooks/web3";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 
 const tabs = [{ name: "Your Collection", href: "#", current: true }];
@@ -17,6 +17,7 @@ function classNames(...classes: string[]) {
 const Profile: NextPage = () => {
   const { nfts } = useOwnedNfts();
   const { listingPrice } = useListingPrice();
+  const [nftPrice, setNftPrice] = useState(0)
   const [activeNft, setActiveNft] = useState<Nft>();
 
   useEffect(() => {
@@ -39,6 +40,11 @@ const Profile: NextPage = () => {
     link.click();
     document.body.removeChild(link);
   };
+
+  const onNftPriceChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    const price = event.target.value;
+    setNftPrice(Number(price))
+  }
 
   return (
     <BaseLayout>
@@ -104,6 +110,7 @@ const Profile: NextPage = () => {
                           <img
                             src={nft.meta.image}
                             alt=""
+                            style={{ height: '168px', width: '168px' }}
                             className={classNames(
                               nft.tokenId == activeNft?.tokenId
                                 ? ""
@@ -170,7 +177,21 @@ const Profile: NextPage = () => {
                       ))}
                     </dl>
                   </div>
-
+                  { !activeNft.isListed && <div>
+                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <img
+                          className="h-6"
+                          alt="ether icon"
+                          src="/images/small-eth.webp"
+                        />
+                      </div>
+                      <input type="number" name="price" id="price" className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md" placeholder="0.00" onChange={onNftPriceChanged}/>
+                      <div className="absolute inset-y-0 right-0 flex items-center">
+                      </div>
+                    </div>
+                  </div>}
                   <div className="flex">
                     <button
                       type="button"
@@ -180,9 +201,9 @@ const Profile: NextPage = () => {
                       Download Image
                     </button>
                     <button
-                      disabled={activeNft.isListed}
+                      disabled={activeNft.isListed || nftPrice <= 0}
                       onClick={() => {
-                        nfts.listNft(activeNft.tokenId, activeNft.price);
+                        nfts.listNft(activeNft.tokenId, nftPrice);
                       }}
                       type="button"
                       className="disabled:text-gray-400 disabled:cursor-not-allowed flex-1 ml-3 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
