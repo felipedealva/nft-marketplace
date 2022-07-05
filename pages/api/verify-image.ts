@@ -34,16 +34,21 @@ export default withSession(async (
     }
     );
 
-    const fileRes = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-      maxBodyLength: Infinity,
-      headers: {
-        "Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`,
-        pinata_api_key: pinataApiKey as string,
-        pinata_secret_api_key: pinataSecretApiKey as string
-      }
-    });
+    try {
 
-    return res.status(200).send(fileRes.data);
+      const fileRes = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        maxBodyLength: Infinity,
+        headers: {
+          "Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`,
+          pinata_api_key: pinataApiKey as string,
+          pinata_secret_api_key: pinataSecretApiKey as string
+        }
+      });
+      return res.status(200).send(fileRes.data);
+    } catch (e: any) {
+      return res.status(500).send(e.message)
+    }
+
   } else {
     return res.status(422).send({ message: "Invalid endpoint" });
   }
