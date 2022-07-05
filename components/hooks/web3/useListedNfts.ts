@@ -55,7 +55,15 @@ export const hookFactory: ListedNftsHookFactory =
               error: "Processing error",
             });
           } catch (e: any) {
-            console.error(e.message);
+            toast.error(e.data?.message || e.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps

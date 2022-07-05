@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Nft } from "@_types/nft";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import NftItem from "../item";
 import { useListedNfts } from "@hooks/web3";
 

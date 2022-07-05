@@ -14,7 +14,6 @@ import { useAccount, useListingPrice, useNetwork } from "@hooks/web3";
 import { ExclamationIcon } from "@heroicons/react/solid";
 import Router from "next/router";
 
-
 const ALLOWED_FIELDS = ["name", "description", "image", "attributes"];
 
 const NftCreate: NextPage = () => {
@@ -62,9 +61,18 @@ const NftCreate: NextPage = () => {
     }
 
     const file = e.target.files[0];
-    const megaBytes = file.size / (1024 ** 2)
+    const megaBytes = file.size / 1024 ** 2;
     if (megaBytes > 9) {
-      throw new Error("Please select an asset that is less than 10MB")
+      toast.error("Please select an asset smaller than 10MB", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      throw new Error("Please select an asset smaller than 10MB");
     }
     const buffer = await file.arrayBuffer();
     const bytes = new Uint8Array(buffer);
@@ -94,8 +102,8 @@ const NftCreate: NextPage = () => {
     } catch (e: any) {
       console.error(e.message);
       setTimeout(() => {
-        window.location.reload()
-      }, 1500)
+        window.location.reload();
+      }, 1500);
     }
   };
 
@@ -151,6 +159,15 @@ const NftCreate: NextPage = () => {
 
       Object.keys(content).forEach((key) => {
         if (!ALLOWED_FIELDS.includes(key)) {
+          toast.error("Invalid JSON structure", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           throw new Error("Invalid JSON structure");
         }
       });
@@ -169,10 +186,17 @@ const NftCreate: NextPage = () => {
         error: "NFT error",
       });
 
-      Router.push("/")
-
+      Router.push("/");
     } catch (e: any) {
-      console.error(e.message);
+      toast.error(e.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -193,9 +217,10 @@ const NftCreate: NextPage = () => {
               </h3>
               <div className="mt-2 text-sm text-yellow-700">
                 <p>
-                  { account.error ? account.error : '' }
-                  { !network.isConnectedToNetwork && '\n Please Connect to Ganache.'}
-                  { network.isLoading && "Loading..."}
+                  {account.error ? account.error : ""}
+                  {!network.isConnectedToNetwork &&
+                    "\n Please Connect to Ganache."}
+                  {network.isLoading && "Loading..."}
                 </p>
               </div>
             </div>
@@ -303,7 +328,7 @@ const NftCreate: NextPage = () => {
                   </div>
                   <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <button
-                      disabled={price.length > 0}
+                      disabled={!price.length > 0}
                       onClick={createNft}
                       type="button"
                       className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
