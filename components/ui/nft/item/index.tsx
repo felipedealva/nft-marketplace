@@ -19,7 +19,8 @@ const NftItem: FunctionComponent<NftItemProps> = ({ item, buyNft }) => {
     <>
       <div className="flex-shrink-0">
         <img
-          className={`h-full w-full object-cover`}
+          className={`object-cover`}
+          style={{ width: '370px', height: '370px'}}
           src={item.meta.image}
           alt="New NFT"
         />
