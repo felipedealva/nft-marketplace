@@ -15,7 +15,7 @@ const NftPreview: FunctionComponent<NftPreviewProps> = ({ item, buyNft }) => {
       style={{ borderRadius: "15px" }}
     >
       <img
-        className="h-50 w-50 object-cover"
+        className="h-50 w-50 object-cover max-w-screen-sm"
         src={item.meta.image}
         alt="New NFT"
       />

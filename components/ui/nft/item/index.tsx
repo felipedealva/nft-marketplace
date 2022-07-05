@@ -20,7 +20,7 @@ const NftItem: FunctionComponent<NftItemProps> = ({ item, buyNft }) => {
       <div className="flex-shrink-0">
         <img
           className={`object-cover`}
-          style={{ width: '370px', height: '370px'}}
+          style={{ width: "370px", height: "370px" }}
           src={item.meta.image}
           alt="New NFT"
         />
@@ -98,12 +98,9 @@ const NftItem: FunctionComponent<NftItemProps> = ({ item, buyNft }) => {
           >
             Buy
           </button>
-          <Link
-            href={`/nft/${item.tokenId}`}
-            onClick={() => router.push(`/nft/${item.tokenId}`)}
-          >
+          <Link href={`/nft/${item.tokenId}`}>
             <button
-              onClick={() => {}}
+              onClick={() => router.push(`/nft/${item.tokenId}`)}
               type="button"
               className="disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none disabled:cursor-not-allowed inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
