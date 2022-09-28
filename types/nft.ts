@@ -34,4 +34,4 @@ export type PinataResponse = {
   PinSize: number;
   Timestamp: string;
   isDuplicate: boolean;
-}
+};
